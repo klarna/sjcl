@@ -94,3 +94,8 @@ clean: tidy
 distclean: clean
 	./configure
 	make sjcl.js tidy
+
+ecc.js: clean
+	./configure --without-all --with-eccjs --compress=none
+	make sjcl.js
+	mv sjcl.js ecc.js
