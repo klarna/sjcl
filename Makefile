@@ -99,3 +99,10 @@ ecc.js: clean
 	./configure --without-all --with-eccjs --compress=none
 	make sjcl.js
 	mv sjcl.js ecc.js
+
+ecc.min.js: clean
+	./configure --without-all --with-eccjs
+	make sjcl.js
+	mv sjcl.js ecc.min.js
+
+ecc: ecc.js ecc.min.js
