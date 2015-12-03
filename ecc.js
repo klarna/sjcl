@@ -3314,6 +3314,12 @@ sjcl.ecc.ecdsa.secretKey.prototype = {
     return sjcl.bitArray.concat(r.toBits(l), s.toBits(l));
   }
 };
+/*
+
+Part of https://github.com/jpillora/eccjs
+
+*/
+
 var ecc = {},
   DEFAULT_CURVE = 192,
   ENC_DEC = ecc.ENC_DEC = {},
@@ -3458,7 +3464,6 @@ function hashAPI (algoName) {
   }
 }
 
-// publicise
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = ecc
 } else {
