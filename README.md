@@ -1,9 +1,68 @@
-sjcl
+ECC.js: simple wrapper around SJCL
 ====
 
-[![Build Status](https://travis-ci.org/bitwiseshiftleft/sjcl.png)](https://travis-ci.org/bitwiseshiftleft/sjcl)
+Based on https://github.com/bitwiseshiftleft/sjcl and https://github.com/jpillora/eccjs.
 
-[![Join the chat at https://gitter.im/bitwiseshiftleft/sjcl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bitwiseshiftleft/sjcl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/klarna/sjcl.png)](https://travis-ci.org/klarna/sjcl)
+
+## Build
+```bash
+$ git clone https://github.com/bitwiseshiftleft/sjcl.git
+$ cd sjcl
+$ ./configure # Requests for extensions go here, e.g. --with-ecc --with-srp
+$ make ecc
+$ make test  # If any of the tests fail, beware.
+```
+
+## Quick Usage
+
+**Encryption and Decryption**
+
+``` js
+// Generate (or load) encryption/decryption keys 
+var keys = ecc.generate(ecc.ENC_DEC);
+// => { dec: "192e35a51dc....", enc: "192037..." }
+
+// A secret message
+var plaintext = "hello world!";
+
+// Encrypt message
+var cipher = ecc.encrypt(keys.enc, plaintext);
+// => {"iv":[1547037338,-736472389,324... }
+
+// Decrypt message
+var result = ecc.decrypt(keys.dec, cipher);
+
+console.log(plaintext === result);
+// => true
+```
+
+**Sign and Verify**
+
+``` js
+// Generate (or load) sign/verify keys 
+var keys = ecc.generate(ecc.SIG_VER);
+// => { sig: "192e35a51dc....", ver: "192037..." }
+
+// An important message
+var message = "hello world!";
+
+// Create digital signature
+var signature = ecc.sign(keys.sig, message);
+
+// Verify matches the text
+var result = ecc.verify(keys.ver, signature, message);
+
+console.log(result); // => true
+```
+
+## API
+
+* `ecc.generate(type[, curve = 192])`
+* `ecc.encrypt(key, plaintext)`
+* `ecc.decrypt(key, cipher)`
+* `ecc.sign(key, text[, hash = true])`
+* `ecc.verify(key, signature, text[, hash = true])`
 
 Stanford Javascript Crypto Library
 
@@ -17,18 +76,3 @@ Security Contact
 Security Mail: sjcl@ovt.me  
 OpenPGP-Key Fingerprint: 0D54 3E52 87B4 EC06 3FA9 0115 72ED A6C7 7AAF 48ED  
 Keyserver: pool.sks-keyservers.net  
-
-Upgrade Guide
-====
-
-## 1.0.3 -> 1.0.4
-
-`codecBase32` has been re-enabled with changes to conform to [RFC 4648](http://tools.ietf.org/html/rfc4648#section-6):
-
-* Padding with `=` is now applied to the output of `fromBits`. If you don't want that padding, you can disable it by calling `fromBits` with a second parameter of `true` or anything that evaluates as "truthy" in JS
-* The encoding alphabet for `sjcl.codec.base32` now matches that specified by the RFC, rather than the extended hex alphabet.
-* The former extended hex alphabet is now available through `sjcl.codec.base32hex` (also matching the RFC). So if you encoded something with `base32` before, you'll want to decode it with `base32hex` now.
-
-Documentation
-====
-The documentation is available [here](http://bitwiseshiftleft.github.io/sjcl/doc/)
