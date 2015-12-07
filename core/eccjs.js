@@ -150,6 +150,8 @@ function hashAPI (algoName) {
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = ecc
-} else {
+} else if (typeof window !== 'undefined') {
   window.ecc = ecc
+} else {
+  this.ecc = ecc
 }
