@@ -511,6 +511,13 @@ sjcl.random = new sjcl.prng(6);
 
     } else {
       // no getRandomValues :-(
+      var randomValues = [];
+
+      for (var i = 0; i < 32; i++) {
+        randomValues.push((new Date()).valueOf() * (Math.random() * 1000|0))
+      }
+      
+      sjcl.random.addEntropy(randomValues, 1024, "loadtime");
     }
   } catch (e) {
     if (typeof window !== 'undefined' && window.console) {
