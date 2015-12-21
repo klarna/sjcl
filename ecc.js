@@ -1665,12 +1665,7 @@ sjcl.random = new sjcl.prng(6);
     var buf, crypt, ab;
 
     // get cryptographically strong entropy depending on runtime environment
-    if (typeof module !== 'undefined' && module.exports && (crypt = getCryptoModule()) && crypt.randomBytes) {
-      buf = crypt.randomBytes(1024/8);
-      buf = new Uint32Array(new Uint8Array(buf).buffer);
-      sjcl.random.addEntropy(buf, 1024, "crypto.randomBytes");
-
-    } else if (typeof window !== 'undefined' && typeof Uint32Array !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof Uint32Array !== 'undefined') {
       ab = new Uint32Array(32);
       if (window.crypto && window.crypto.getRandomValues) {
         window.crypto.getRandomValues(ab);
@@ -1682,6 +1677,11 @@ sjcl.random = new sjcl.prng(6);
 
       // get cryptographically strong entropy in Webkit
       sjcl.random.addEntropy(ab, 1024, "crypto.getRandomValues");
+
+    } else if (typeof module !== 'undefined' && module.exports && (crypt = getCryptoModule()) && crypt.randomBytes) {
+      buf = crypt.randomBytes(1024/8);
+      buf = new Uint32Array(new Uint8Array(buf).buffer);
+      sjcl.random.addEntropy(buf, 1024, "crypto.randomBytes");
 
     } else {
       // no getRandomValues :-(
