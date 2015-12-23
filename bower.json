@@ -1,4 +1,4 @@
 {
-	"name": "sjcl",
-	"main": ["./sjcl.js"]
+	"name": "ecc",
+	"main": ["./ecc.js"]
 }
