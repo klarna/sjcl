@@ -1,16 +1,22 @@
 {
-    "name": "ecc",
-    "version": "1.0.4",
-    "description": "ECC.js: simple wrapper around SJCL",
-    "main": "ecc.js",
-    "author": "klarna",
-    "keywords": ["encryption", "high-level", "crypto"],
-    "repository" : {
-        "type": "git",
-        "url": "https://github.com/klarna/sjcl.git"
-    },
-    "scripts": {
-      "test": "make test"
-    },
-    "engines": { "node": "*" }
+  "name": "ecc",
+  "version": "1.0.5",
+  "description": "ECC.js: simple wrapper around SJCL",
+  "main": "ecc.js",
+  "author": "klarna",
+  "keywords": [
+    "encryption",
+    "high-level",
+    "crypto"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/klarna/sjcl.git"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": {
+    "node": "*"
+  }
 }
