@@ -40,32 +40,42 @@ var cache = {
 }
 
 ecc.encrypt = function (enckey, plaintext) {
-  var kem = cache.enc[enckey]
+  try {
+    var kem = cache.enc[enckey]
 
-  if (!kem) {
-    kem = cache.enc[enckey] = elg.importPublic(enckey).kem()
-    kem.tagHex = sjcl.codec.hex.fromBits(kem.tag)
+    if (!kem) {
+      kem = cache.enc[enckey] = elg.importPublic(enckey).kem()
+      kem.tagHex = sjcl.codec.hex.fromBits(kem.tag)
+    }
+
+    var obj = sjcl.json._encrypt(kem.key, plaintext)
+    obj.tag = kem.tagHex
+    return JSON.stringify(obj)
+  } catch (e) {
+    typeof console !== 'undefined' && console.error && console.error(e)
+    return plaintext
   }
-
-  var obj = sjcl.json._encrypt(kem.key, plaintext)
-  obj.tag = kem.tagHex
-  return JSON.stringify(obj)
 }
 
 ecc.decrypt = function (deckey, ciphertext) {
   var obj = JSON.parse(ciphertext)
 
-  var kem = cache.dec[deckey]
-  if (!kem) {
-    kem = cache.dec[deckey] = elg.importSecret(deckey)
-    kem.$keys = {}
+  try {
+    var kem = cache.dec[deckey]
+    if (!kem) {
+      kem = cache.dec[deckey] = elg.importSecret(deckey)
+      kem.$keys = {}
+    }
+
+    var key = kem.$keys[obj.tag]
+    if (!key)
+      key = kem.$keys[obj.tag] = kem.unkem(sjcl.codec.hex.toBits(obj.tag))
+
+    return sjcl.json._decrypt(key, obj)
+  } catch (e) {
+    typeof console !== 'undefined' && console.error && console.error(e)
+    return ciphertext
   }
-
-  var key = kem.$keys[obj.tag]
-  if (!key)
-    key = kem.$keys[obj.tag] = kem.unkem(sjcl.codec.hex.toBits(obj.tag))
-
-  return sjcl.json._decrypt(key, obj)
 }
 
 ecc.sign = function (sigkey, text, hash) {
