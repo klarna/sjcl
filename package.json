@@ -1,6 +1,6 @@
 {
   "name": "ecc",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "ECC.js: simple wrapper around SJCL",
   "main": "ecc.js",
   "author": "klarna",
