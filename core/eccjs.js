@@ -51,7 +51,9 @@ ecc.encrypt = function (enckey, plaintext) {
     var obj = sjcl.json._encrypt(kem.key, plaintext)
     obj.tag = kem.tagHex
     for (var key in obj) {
-      obj[key].toJSON = null
+      if (obj[key]) {
+        obj[key].toJSON = null
+      }
     }
     return JSON.stringify(obj)
   } catch (e) {
